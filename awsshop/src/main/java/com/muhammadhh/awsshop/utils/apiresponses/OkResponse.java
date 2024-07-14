@@ -1,11 +1,11 @@
-package com.muhammadhh.awsshop.utils;
+package com.muhammadhh.awsshop.utils.apiresponses;
 
-public class ApiResponse<T> {
+public class OkResponse<T> {
 	private String status;
 	private T data;
 	private String message;
 	
-	public ApiResponse(String status, T data, String message) {
+	public OkResponse(String status, T data, String message) {
 		super();
 		this.status = status;
 		this.data = data;

@@ -1,4 +1,4 @@
-package com.muhammadhh.awsshop.utils;
+package com.muhammadhh.awsshop.utils.apiresponses;
 
 import java.time.Instant;
 import java.util.HashMap;
