@@ -6,9 +6,19 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+
+@Schema(description = "Response structure for error operations")
 public class ErrorResponse {
+	
+    @Schema(description = "Status of the response", example = "error")
 	private String status;
+    
+    @Schema(description = "Message of the response", example = "Failed to add product")
 	private String message;
+    
+    @Schema(description = "Details of the error")
     private Map<String, Object> details;
     
     // Default generic error response

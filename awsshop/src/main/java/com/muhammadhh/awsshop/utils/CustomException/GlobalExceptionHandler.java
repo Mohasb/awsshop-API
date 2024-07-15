@@ -35,8 +35,8 @@ public class GlobalExceptionHandler {
         errorDetails.put("error_code", HttpStatus.BAD_REQUEST.value());
 
         ErrorResponse errorResponse = new ErrorResponse(
-            "error",
-            "Validation field error",
+            "ERROR",
+            "Validation errors",
             errorDetails
         );
         
@@ -58,8 +58,8 @@ public class GlobalExceptionHandler {
         errorDetails.put("error_code", HttpStatus.BAD_REQUEST.value());
 
         ErrorResponse errorResponse = new ErrorResponse(
-            "error",
-            "Errores de validación",
+            "ERROR",
+            "Validation errors",
             errorDetails
         );
         

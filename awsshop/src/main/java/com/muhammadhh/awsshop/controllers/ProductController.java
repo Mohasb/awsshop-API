@@ -1,7 +1,5 @@
 package com.muhammadhh.awsshop.controllers;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +42,7 @@ public class ProductController {
 			@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Product.class))) }),
 			@ApiResponse(responseCode = "400", description = "No products found", content = @Content),
 			@ApiResponse(responseCode = "500", content = @Content) })
-	public List<Product> getAllProducts() {
+	public ResponseEntity<?> getAllProducts() {
 		return productService.getAllProducts();
 	}
 
@@ -61,7 +59,7 @@ public class ProductController {
 		Product product = productService.getProductById(id);
 
 		if (product != null) {
-			OkResponse<Product> response = new OkResponse<Product>("success", product, null);
+			OkResponse<Product> response = new OkResponse<Product>("success", null, product);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
 			ErrorResponse errorResponse = new ErrorResponse(id);
@@ -73,10 +71,12 @@ public class ProductController {
 	@PostMapping
 	@Operation(summary = "Add a product", description = "add a product")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "product added", content = {
-					@Content(mediaType = "application/json", schema = @Schema(implementation = Product.class)) }),
-			@ApiResponse(responseCode = "400", description = "Product not added", content = @Content) })
-	public ResponseEntity<?> createProduct( @Valid @RequestBody Product product) {
+			@ApiResponse(responseCode = "201", description = "Product added", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = OkResponse.class)) }),
+			@ApiResponse(responseCode = "400", description = "Product not added", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)) }),
+			@ApiResponse(responseCode = "500", content = @Content) })
+	public ResponseEntity<?> createProduct(@Valid @RequestBody Product product) {
 		return productService.saveProduct(product);
 	}
 
@@ -109,8 +109,8 @@ public class ProductController {
 			@ApiResponse(responseCode = "200", description = "product added", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Product.class)) }),
 			@ApiResponse(responseCode = "400", description = "Product not added", content = @Content) })
-	public ResponseEntity<HttpStatus> deleteProduct(@PathVariable(value = "id", required = true) Long id) {
-		productService.deleteProduct(id);
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	public ResponseEntity<?> deleteProduct(@PathVariable(value = "id", required = true) Long id) {
+		
+		return productService.deleteProduct(id);
 	}
 }
