@@ -35,7 +35,7 @@ public class Product {
 
 	@NotBlank(message = "glbUrl cannot be empty")
 	@Size(min = 2, max = 50)
-	private String glbUrl;
+	private String imageOrGlbUrl;
 
 	public Long getId() {
 		return id;
@@ -69,11 +69,13 @@ public class Product {
 		this.description = description;
 	}
 
-	public String getGlbUrl() {
-		return glbUrl;
+	public String getImageOrGlbUrl() {
+		return imageOrGlbUrl;
 	}
 
-	public void setGlbUrl(String glbUrl) {
-		this.glbUrl = glbUrl;
+	public void setImageOrGlbUrl(String imageOrGlbUrl) {
+		this.imageOrGlbUrl = imageOrGlbUrl;
 	}
+
+	
 }
