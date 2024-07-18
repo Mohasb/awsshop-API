@@ -12,19 +12,25 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
 @Table(name = "products")
+@Data @NoArgsConstructor @AllArgsConstructor @Builder
 public class Product {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotBlank(message = "name cannot be empty")
+	@NotBlank(message = "name is mandatory")
 	@Size(min = 2, max = 50, message = "name has to be between 2-50 letters")
 	private String name;
 
-	@NotNull(message = "price cannot be empty")
+	@NotNull(message = "price is mandatory")
 	@Positive(message = "Price has to be greater than 0")
 	private Double price;
 
@@ -37,45 +43,4 @@ public class Product {
 	@Size(min = 2, max = 50)
 	private String imageOrGlbUrl;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Double getPrice() {
-		return price;
-	}
-
-	public void setPrice(Double price) {
-		this.price = price;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getImageOrGlbUrl() {
-		return imageOrGlbUrl;
-	}
-
-	public void setImageOrGlbUrl(String imageOrGlbUrl) {
-		this.imageOrGlbUrl = imageOrGlbUrl;
-	}
-
-	
 }

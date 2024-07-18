@@ -1,7 +1,6 @@
 package com.muhammadhh.awsshop.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,15 +55,7 @@ public class ProductController {
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getProductById(@PathVariable(value = "id", required = true) Long id) {
 
-		Product product = productService.getProductById(id);
-
-		if (product != null) {
-			OkResponse<Product> response = new OkResponse<Product>("success", null, product);
-			return new ResponseEntity<>(response, HttpStatus.OK);
-		} else {
-			ErrorResponse errorResponse = new ErrorResponse(id);
-			return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
-		}
+		return productService.getProductById(id);
 	}
 
 	// --------------------------------------------------------POST---------------------------------------------------------------------------
@@ -89,17 +80,17 @@ public class ProductController {
 			@ApiResponse(responseCode = "400", description = "Product not added", content = @Content) })
 	public ResponseEntity<?> updateProduct(@PathVariable(value = "id", required = true) Long id,
 			@RequestBody @Valid Product productDetails) {
-		Product product = productService.getProductById(id);
+		return  productService.getProductById(id);
 
-		if (product != null) {
-			product.setName(productDetails.getName());
-			product.setPrice(productDetails.getPrice());
-			product.setDescription(productDetails.getDescription());
-			ResponseEntity<?> updatedProduct = productService.saveProduct(product);
-			return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+		
+		/*
+		 * if (product != null) { product.setName(productDetails.getName());
+		 * product.setPrice(productDetails.getPrice());
+		 * product.setDescription(productDetails.getDescription()); ResponseEntity<?>
+		 * updatedProduct = productService.saveProduct(product); return new
+		 * ResponseEntity<>(updatedProduct, HttpStatus.OK); } else { return new
+		 * ResponseEntity<>(HttpStatus.NOT_FOUND); }
+		 */
 	}
 
 	// --------------------------------------------------------DELETE---------------------------------------------------------------------------
