@@ -3,6 +3,7 @@ package com.muhammadhh.awsshop.models;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,12 +30,15 @@ public class Category {
 
     @NotBlank(message = "name is mandatory")
     @Size(min = 2, max = 50, message = "name has to be between 2-50 letters")
+    @Column(unique = true)
     private String name;
 
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private Category parentCategory;
 
-    @OneToMany(mappedBy = "parentCategory")
-    private Set<Category> subCategories = new HashSet<>();
+	/*
+	 * @OneToMany(mappedBy = "parentCategory") private Set<Category> subCategories =
+	 * new HashSet<>();
+	 */
 }

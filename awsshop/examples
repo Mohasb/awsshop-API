@@ -1,0 +1,49 @@
+Introducir categoria:
+{
+  "name": "Electrónica"
+}
+
+Introducir subcategoria:
+{
+  "name": "Smartphones",
+  "parentCategory": {
+    "id": 1
+  }
+}
+{
+  "name": "Computers",
+  "parentCategory": {
+    "id": 1
+  }
+}
+
+Introducir un producto: 
+{
+  "name": "iPhone 13",
+  "price": 999.99,
+  "description": "Latest iPhone model",
+  "imageOrGlbUrl": "http://example.com/iphone13.png",
+  "stock": 50,
+  "sku": "IPH13",
+  "status": "ACTIVE",
+  "createdAt": "2024-07-20T11:41:37.520Z",
+  "updatedAt": "2024-07-20T11:41:37.521Z",
+  "category": {
+    "id": 2
+  }
+}
+
+{
+  "name": "Macbook",
+  "price": 1999.99,
+  "description": "Latest v model",
+  "imageOrGlbUrl": "http://example.com/Macbook.png",
+  "stock": 50,
+  "sku": "MCK",
+  "status": "ACTIVE",
+  "createdAt": "2024-07-20T11:41:37.520Z",
+  "updatedAt": "2024-07-20T11:41:37.521Z",
+  "category": {
+    "id": 3
+  }
+}

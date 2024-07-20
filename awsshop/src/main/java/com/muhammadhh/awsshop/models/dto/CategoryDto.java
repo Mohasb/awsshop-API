@@ -1,6 +1,9 @@
 package com.muhammadhh.awsshop.models.dto;
 
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.muhammadhh.awsshop.models.Category;
 
 import lombok.AllArgsConstructor;
@@ -13,8 +16,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class CategoryDto {
-    //private Long id;
+    private Long id;
     private String name;
     private Category parentCategory;
-    //private List<CategoryDto> subCategories;
+    private List<CategoryDto> subCategories;
 }
