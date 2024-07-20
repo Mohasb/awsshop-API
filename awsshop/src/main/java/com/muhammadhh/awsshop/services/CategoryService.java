@@ -15,6 +15,8 @@ import com.muhammadhh.awsshop.models.Category;
 import com.muhammadhh.awsshop.models.dto.CategoryDto;
 import com.muhammadhh.awsshop.respositories.CategoryRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class CategoryService {
 
@@ -95,8 +97,13 @@ public class CategoryService {
         Category savedCategory = categoryRepository.save(category);
         return modelMapper.map(savedCategory, CategoryDto.class);
     }
-
+    @Transactional
     public void deleteById(Long id) {
-        categoryRepository.deleteById(id);
+    	Optional<Category> categoryOptional = categoryRepository.findById(id);
+        if (categoryOptional.isPresent()) {
+            categoryRepository.delete(categoryOptional.get());
+        } else {
+            throw new RuntimeException("Category not found");
+        }
     }
 }
