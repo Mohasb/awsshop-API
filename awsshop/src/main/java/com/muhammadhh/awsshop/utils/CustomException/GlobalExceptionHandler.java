@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
-import com.muhammadhh.awsshop.utils.apiresponses.ErrorResponse;
+import com.muhammadhh.awsshop.utils.AwsshopApiResponse;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -21,7 +21,7 @@ import jakarta.validation.ConstraintViolationException;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException ex, WebRequest request) {
+    public ResponseEntity<AwsshopApiResponse<?>> handleConstraintViolationException(ConstraintViolationException ex, WebRequest request) {
         ValidationErrorResponse validationErrorResponse = new ValidationErrorResponse();
         
         for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
@@ -34,17 +34,17 @@ public class GlobalExceptionHandler {
         errorDetails.put("path", request.getDescription(false).replace("uri=", ""));
         errorDetails.put("error_code", HttpStatus.BAD_REQUEST.value());
 
-        ErrorResponse errorResponse = new ErrorResponse(
+        AwsshopApiResponse<?> errorResponse = new AwsshopApiResponse<>(
             "ERROR",
             "Validation errors",
-            errorDetails
+            errorDetails, null
         );
         
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest request) {
+    public ResponseEntity<AwsshopApiResponse<?>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest request) {
         ValidationErrorResponse validationErrorResponse = new ValidationErrorResponse();
         
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
@@ -57,10 +57,10 @@ public class GlobalExceptionHandler {
         errorDetails.put("path", request.getDescription(false).replace("uri=", ""));
         errorDetails.put("error_code", HttpStatus.BAD_REQUEST.value());
 
-        ErrorResponse errorResponse = new ErrorResponse(
+        AwsshopApiResponse<?> errorResponse = new AwsshopApiResponse<>(
             "ERROR",
             "Validation errors",
-            errorDetails
+            errorDetails, null
         );
         
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);

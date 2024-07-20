@@ -1,6 +1,8 @@
 package com.muhammadhh.awsshop.services;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.muhammadhh.awsshop.models.Product;
 import com.muhammadhh.awsshop.respositories.ProductRepository;
-import com.muhammadhh.awsshop.utils.apiresponses.ErrorResponse;
-import com.muhammadhh.awsshop.utils.apiresponses.OkResponse;
+import com.muhammadhh.awsshop.utils.AwsshopApiResponse;
 
 @Service
 public class ProductService {
@@ -19,35 +20,67 @@ public class ProductService {
 	@Autowired
 	private ProductRepository productRepository;
 
-	public ResponseEntity<?> getAllProducts() {
+	public ResponseEntity<AwsshopApiResponse<List<Product>>> getAllProducts() {
 
-		List<Product> productsList = productRepository.findAll();
+		try {
+			List<Product> productsList = productRepository.findAll();
 
-		if (!productsList.isEmpty()) {
-			return new ResponseEntity<>(new OkResponse<>("SUCCESS", "List of all products", productsList),
-					HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(new OkResponse<>("SUCCESS", "There are no products", productsList),
-					HttpStatus.OK);
+			if (!productsList.isEmpty()) {
+				return new ResponseEntity<>(
+						new AwsshopApiResponse<>("SUCCESS", "List of all products", null, productsList), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(
+						new AwsshopApiResponse<>("SUCCESS", "There are no products", null, productsList),
+						HttpStatus.OK);
+			}
+		} catch (Exception e) {
+			Map<String, Object> errorDetails = new HashMap<>();
+			errorDetails.put("exception", e.getMessage());
+
+			return new ResponseEntity<>(
+					new AwsshopApiResponse<>("ERROR", "An error occurred while fetching products", errorDetails, null),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+
 	}
 
-	public ResponseEntity<?> getProductById(Long id) {
+	public ResponseEntity<AwsshopApiResponse<Product>> getProductById(Long id) {
 
-		Product product = productRepository.findById(id).orElse(null);
-		if (product != null)
-			return new ResponseEntity<>(new OkResponse<>("SUCCESS", "Product found", product), HttpStatus.CREATED);
-		else
-			return new ResponseEntity<>(
-					new ErrorResponse("ERROR", "Product with id=" + id.toString() + " not found", null),
-					HttpStatus.NOT_FOUND);
+		try {
+			Product product = productRepository.findById(id).orElse(null);
+			if (product != null) {
+				return new ResponseEntity<>(new AwsshopApiResponse<>("SUCCESS", "Product found", null, product),
+						HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(
+						new AwsshopApiResponse<>("ERROR", "Product with id=" + id + " not found", null, null),
+						HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			Map<String, Object> errorDetails = new HashMap<>();
+			errorDetails.put("exception", e.getMessage());
+
+			return new ResponseEntity<>(new AwsshopApiResponse<>("ERROR",
+					"An error occurred while fetching the product", errorDetails, null),
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	public ResponseEntity<?> saveProduct(Product product) {
 
-		Product savedProduct = productRepository.save(product);
-		return new ResponseEntity<>(new OkResponse<>("SUCCESS", "Product added successfully", savedProduct),
-				HttpStatus.CREATED);
+		try {
+			Product savedProduct = productRepository.save(product);
+			return new ResponseEntity<>(
+					new AwsshopApiResponse<>("SUCCESS", "Product added successfully", null, savedProduct),
+					HttpStatus.CREATED);
+		} catch (Exception e) {
+			Map<String, Object> errorDetails = new HashMap<>();
+			errorDetails.put("exception", e.getMessage());
+
+			return new ResponseEntity<>(
+					new AwsshopApiResponse<>("ERROR", "An error occurred while saving the product", errorDetails, null),
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	public ResponseEntity<?> deleteProduct(Long id) {
@@ -55,15 +88,19 @@ public class ProductService {
 			Optional<Product> productOptional = productRepository.findById(id);
 			if (productOptional.isPresent()) {
 				productRepository.deleteById(id);
-				return new ResponseEntity<>(
-						new OkResponse<>("SUCCESS", "Product deleted successfully", productOptional), HttpStatus.OK);
+				return new ResponseEntity<>(new AwsshopApiResponse<>("SUCCESS", "Product deleted successfully", null,
+						productOptional.get()), HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(
-						new ErrorResponse("ERROR", "Product with id=" + id.toString() + " not found", null),
+						new AwsshopApiResponse<>("ERROR", "Product with id=" + id + " not found", null, null),
 						HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			return new ResponseEntity<>(new ErrorResponse("ERROR", "Error occurred while deleting product", null),
+			Map<String, Object> errorDetails = new HashMap<>();
+			errorDetails.put("exception", e.getMessage());
+
+			return new ResponseEntity<>(new AwsshopApiResponse<>("ERROR",
+					"An error occurred while deleting the product", errorDetails, null),
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
