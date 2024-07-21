@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.muhammadhh.awsshop.models.dto.CategoryDto;
-import com.muhammadhh.awsshop.services.CategoryService;
+import com.muhammadhh.awsshop.services.category.CategoryService;
 import com.muhammadhh.awsshop.utils.AwsshopApiResponse;
 
 import io.swagger.v3.oas.annotations.tags.Tag;

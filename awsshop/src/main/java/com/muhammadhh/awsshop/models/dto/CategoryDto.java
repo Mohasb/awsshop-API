@@ -23,6 +23,6 @@ public class CategoryDto {
     @NotBlank(message = "name is mandatory")
     @Size(min = 2, max = 50, message = "name has to be between 2-50 letters")
     private String name;
-    private Category parentCategory;
+    private CategoryDto parentCategory;
     private List<CategoryDto> subCategories;
 }
