@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.muhammadhh.awsshop.models.Product;
-import com.muhammadhh.awsshop.services.ProductService;
-import com.muhammadhh.awsshop.utils.AwsshopApiResponse;
+import com.muhammadhh.awsshop.services.product.ProductService;
+import com.muhammadhh.awsshop.utils.responses.AwsshopApiResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -28,7 +28,6 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/products")
-//SWAGGER
 @Tag(name = "Products", description = "Products endpoints crud")
 public class ProductController {
 
@@ -43,28 +42,30 @@ public class ProductController {
 			@ApiResponse(responseCode = "400", description = "No products found", content = @Content),
 			@ApiResponse(responseCode = "500", content = @Content) })
 	public ResponseEntity<AwsshopApiResponse<List<Product>>> getAllProducts() {
+
 		return productService.getAllProducts();
+
 	}
 
 	// --------------------------------------------------------GET(ID)---------------------------------------------------------------------------
+	@GetMapping("/{id}")
 	@Operation(summary = "Retrieve a product by Id", description = "Get a product object by specifying its id. The response is product object with his fields")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Producto encontrado", content = {
+			@ApiResponse(responseCode = "200", description = "Product found", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Product.class)) }),
 			@ApiResponse(responseCode = "400", description = "Product not found with that id", content = @Content),
 			@ApiResponse(responseCode = "500", content = @Content) })
-	@GetMapping("/{id}")
 	public ResponseEntity<?> getProductById(@PathVariable(value = "id", required = true) Long id) {
 
 		return productService.getProductById(id);
+
 	}
 
 	// --------------------------------------------------------POST---------------------------------------------------------------------------
 	@PostMapping
 	@Operation(summary = "Add a product", description = "add a product")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "201", description = "Product added", content = {
-					@Content(mediaType = "application/json", schema = @Schema(implementation = AwsshopApiResponse.class)) }),
+	@ApiResponses(value = { @ApiResponse(responseCode = "201", description = "Product added", content = {
+			@Content(mediaType = "application/json", schema = @Schema(implementation = AwsshopApiResponse.class)) }),
 			@ApiResponse(responseCode = "400", description = "Product not added", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = AwsshopApiResponse.class)) }),
 			@ApiResponse(responseCode = "500", content = @Content) })
@@ -81,20 +82,20 @@ public class ProductController {
 			@ApiResponse(responseCode = "400", description = "Product not added", content = @Content) })
 	public ResponseEntity<?> updateProduct(@PathVariable(value = "id", required = true) Long id,
 			@RequestBody @Valid Product productDetails) {
-		
-		return  productService.getProductById(id);
-		
+
+		return productService.putProduct(id);
+
 	}
 
 	// --------------------------------------------------------DELETE---------------------------------------------------------------------------
 	@DeleteMapping("/{id}")
-	@Operation(summary = "Add a product", description = "add a product")
+	@Operation(summary = "Delete a product", description = "delete a product")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "product added", content = {
+			@ApiResponse(responseCode = "200", description = "product deleted", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Product.class)) }),
 			@ApiResponse(responseCode = "400", description = "Product not added", content = @Content) })
 	public ResponseEntity<?> deleteProduct(@PathVariable(value = "id", required = true) Long id) {
-		
+
 		return productService.deleteProduct(id);
 	}
 }

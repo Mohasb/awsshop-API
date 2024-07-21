@@ -3,8 +3,6 @@ package com.muhammadhh.awsshop.models.dto;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.muhammadhh.awsshop.models.Category;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

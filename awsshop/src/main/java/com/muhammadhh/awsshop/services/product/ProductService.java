@@ -1,4 +1,4 @@
-package com.muhammadhh.awsshop.services;
+package com.muhammadhh.awsshop.services.product;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,10 +12,9 @@ import org.springframework.stereotype.Service;
 
 import com.muhammadhh.awsshop.models.Category;
 import com.muhammadhh.awsshop.models.Product;
-import com.muhammadhh.awsshop.models.dto.CategoryDto;
 import com.muhammadhh.awsshop.respositories.CategoryRepository;
 import com.muhammadhh.awsshop.respositories.ProductRepository;
-import com.muhammadhh.awsshop.utils.AwsshopApiResponse;
+import com.muhammadhh.awsshop.utils.responses.AwsshopApiResponse;
 
 @Service
 public class ProductService {
@@ -25,6 +24,7 @@ public class ProductService {
 	@Autowired
 	private CategoryRepository categoryRepository;
 
+	// --------------------------------------------------------GETALL---------------------------------------------------------------------------
 	public ResponseEntity<AwsshopApiResponse<List<Product>>> getAllProducts() {
 
 		try {
@@ -48,7 +48,8 @@ public class ProductService {
 		}
 
 	}
-
+	
+	// --------------------------------------------------------GET(ID)---------------------------------------------------------------------------
 	public ResponseEntity<AwsshopApiResponse<Product>> getProductById(Long id) {
 
 		try {
@@ -71,6 +72,7 @@ public class ProductService {
 		}
 	}
 
+	// --------------------------------------------------------POST---------------------------------------------------------------------------
 	public ResponseEntity<?> saveProduct(Product product) {
 
 		try {
@@ -94,6 +96,14 @@ public class ProductService {
 		}
 	}
 
+	// --------------------------------------------------------PUT---------------------------------------------------------------------------
+	// TODO put
+	public ResponseEntity<?> putProduct(Long id) {
+		return new ResponseEntity<>(
+				new AwsshopApiResponse<>("ERROR", "Product with id=" + id + " not found", null, null),
+				HttpStatus.NOT_FOUND);
+	}
+	// --------------------------------------------------------DELETE---------------------------------------------------------------------------
 	public ResponseEntity<?> deleteProduct(Long id) {
 		try {
 			Optional<Product> productOptional = productRepository.findById(id);

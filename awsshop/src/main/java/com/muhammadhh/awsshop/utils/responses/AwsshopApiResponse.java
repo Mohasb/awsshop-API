@@ -1,4 +1,4 @@
-package com.muhammadhh.awsshop.utils;
+package com.muhammadhh.awsshop.utils.responses;
 
 import java.util.Map;
 

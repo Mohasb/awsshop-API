@@ -1,4 +1,4 @@
-package com.muhammadhh.awsshop.utils;
+package com.muhammadhh.awsshop.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

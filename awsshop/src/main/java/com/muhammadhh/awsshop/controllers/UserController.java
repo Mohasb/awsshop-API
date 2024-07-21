@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.muhammadhh.awsshop.models.User;
-import com.muhammadhh.awsshop.services.UserService;
+import com.muhammadhh.awsshop.services.user.UserService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

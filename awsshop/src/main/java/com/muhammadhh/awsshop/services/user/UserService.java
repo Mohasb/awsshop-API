@@ -1,4 +1,4 @@
-package com.muhammadhh.awsshop.services;
+package com.muhammadhh.awsshop.services.user;
 
 import java.util.Collections;
 import java.util.HashSet;
