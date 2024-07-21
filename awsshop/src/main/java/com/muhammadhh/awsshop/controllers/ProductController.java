@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.muhammadhh.awsshop.models.Product;
+import com.muhammadhh.awsshop.models.dto.ProductDto;
 import com.muhammadhh.awsshop.services.product.ProductService;
 import com.muhammadhh.awsshop.utils.responses.AwsshopApiResponse;
 
@@ -69,8 +70,8 @@ public class ProductController {
 			@ApiResponse(responseCode = "400", description = "Product not added", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = AwsshopApiResponse.class)) }),
 			@ApiResponse(responseCode = "500", content = @Content) })
-	public ResponseEntity<?> createProduct(@Valid @RequestBody Product product) {
-		return productService.saveProduct(product);
+	public ResponseEntity<AwsshopApiResponse<ProductDto>> createProduct(@Valid @RequestBody ProductDto productDto) {
+		return productService.saveProduct(productDto);
 	}
 
 	// --------------------------------------------------------PUT---------------------------------------------------------------------------

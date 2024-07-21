@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +13,10 @@ import org.springframework.stereotype.Service;
 
 import com.muhammadhh.awsshop.models.Category;
 import com.muhammadhh.awsshop.models.Product;
+import com.muhammadhh.awsshop.models.dto.ProductDto;
 import com.muhammadhh.awsshop.respositories.CategoryRepository;
 import com.muhammadhh.awsshop.respositories.ProductRepository;
+import com.muhammadhh.awsshop.utils.ApiConstants;
 import com.muhammadhh.awsshop.utils.responses.AwsshopApiResponse;
 
 @Service
@@ -23,6 +26,8 @@ public class ProductService {
 	private ProductRepository productRepository;
 	@Autowired
 	private CategoryRepository categoryRepository;
+	@Autowired
+	private ModelMapper modelMapper;
 
 	// --------------------------------------------------------GETALL---------------------------------------------------------------------------
 	public ResponseEntity<AwsshopApiResponse<List<Product>>> getAllProducts() {
@@ -48,7 +53,7 @@ public class ProductService {
 		}
 
 	}
-	
+
 	// --------------------------------------------------------GET(ID)---------------------------------------------------------------------------
 	public ResponseEntity<AwsshopApiResponse<Product>> getProductById(Long id) {
 
@@ -73,18 +78,21 @@ public class ProductService {
 	}
 
 	// --------------------------------------------------------POST---------------------------------------------------------------------------
-	public ResponseEntity<?> saveProduct(Product product) {
+	public ResponseEntity<AwsshopApiResponse<ProductDto>> saveProduct(ProductDto productDto) {
 
 		try {
-			Optional<Category> productCategory = categoryRepository.findById(product.getCategory().getId());
+			Product product = modelMapper.map(productDto, Product.class);
 
-			if (productCategory.isPresent()) {
-				product.setCategory(productCategory.get());
-			}
+			Optional<Category> category = categoryRepository.findById(productDto.getCategoryId());
+
+			category.ifPresent(product::setCategory);
 
 			Product savedProduct = productRepository.save(product);
+
+			ProductDto productDtoSaved = modelMapper.map(savedProduct, ProductDto.class);
+
 			return new ResponseEntity<>(
-					new AwsshopApiResponse<>("SUCCESS", "Product added successfully", null, savedProduct),
+					new AwsshopApiResponse<>("SUCCESS", "Product added successfully", null, productDtoSaved),
 					HttpStatus.CREATED);
 		} catch (Exception e) {
 			Map<String, Object> errorDetails = new HashMap<>();
@@ -103,6 +111,7 @@ public class ProductService {
 				new AwsshopApiResponse<>("ERROR", "Product with id=" + id + " not found", null, null),
 				HttpStatus.NOT_FOUND);
 	}
+
 	// --------------------------------------------------------DELETE---------------------------------------------------------------------------
 	public ResponseEntity<?> deleteProduct(Long id) {
 		try {

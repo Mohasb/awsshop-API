@@ -82,14 +82,20 @@ public class CategoryService {
 
 			if (!existingCategoryOptional.isPresent()) {
 				Category category = modelMapper.map(categoryDto, Category.class);
-				Category savedCategory = categoryRepository.save(category);
 
-				if (savedCategory.getParentCategory().getName() == null) {
+				if (category.getParentCategory() != null) {
 					Optional<Category> parentCategoryOptional = categoryRepository
 							.findById(categoryDto.getParentCategory().getId());
-					savedCategory.getParentCategory().setName(parentCategoryOptional.get().getName());
+					if (!parentCategoryOptional.isPresent()) {
+						return new ResponseEntity<>(
+								new AwsshopApiResponse<>(ApiConstants.ERROR_STATUS, ApiConstants.PARENT_CATEGORY_NOT_FOUND_MESSAGE, null, null),
+								HttpStatus.NOT_FOUND);
+					}
+					
+					category.getParentCategory().setName(parentCategoryOptional.get().getName());
 				}
-
+				
+				Category savedCategory = categoryRepository.save(category);
 				CategoryDto savedCategoryDto = modelMapper.map(savedCategory, CategoryDto.class);
 
 				return new ResponseEntity<>(
@@ -98,7 +104,7 @@ public class CategoryService {
 			} else {
 				return new ResponseEntity<>(
 						new AwsshopApiResponse<>(ApiConstants.ERROR_STATUS, ApiConstants.CATEGORY_CREATE_ERROR_DUPLICATED, null, null),
-						HttpStatus.CREATED);
+						HttpStatus.BAD_REQUEST);
 			}
 
 		} catch (Exception e) {

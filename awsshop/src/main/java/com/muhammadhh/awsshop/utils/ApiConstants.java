@@ -9,6 +9,7 @@ public class ApiConstants {
     public static final String CATEGORY_LIST_SUCCESS_MESSAGE = "List of all categories";
     public static final String CATEGORY_FOUND_MESSAGE = "Category found";
     public static final String CATEGORY_NOT_FOUND_MESSAGE = "Category not found";
+    public static final String PARENT_CATEGORY_NOT_FOUND_MESSAGE = "ParentCategory not found";
     public static final String NO_CATEGORIES_MESSAGE = "There are no categories";
     public static final String CATEGORY_UPDATED_SUCCESS_MESSAGE = "Category updated successfully";
     public static final String CATEGORY_UPDATE_ERROR_MESSAGE = "An error occurred while updating the category";
