@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,17 +31,20 @@ public class ProductService {
 	private ModelMapper modelMapper;
 
 	// --------------------------------------------------------GETALL---------------------------------------------------------------------------
-	public ResponseEntity<AwsshopApiResponse<List<Product>>> getAllProducts() {
+	public ResponseEntity<AwsshopApiResponse<List<ProductDto>>> getAllProducts() {
 
 		try {
 			List<Product> productsList = productRepository.findAll();
+			List<ProductDto> productsDtoList = productsList.stream()
+		            .map(product -> modelMapper.map(product, ProductDto.class))
+		            .collect(Collectors.toList());
 
 			if (!productsList.isEmpty()) {
 				return new ResponseEntity<>(
-						new AwsshopApiResponse<>("SUCCESS", "List of all products", null, productsList), HttpStatus.OK);
+						new AwsshopApiResponse<>("SUCCESS", "List of all products", null, productsDtoList), HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(
-						new AwsshopApiResponse<>("SUCCESS", "There are no products", null, productsList),
+						new AwsshopApiResponse<>("SUCCESS", "There are no products", null, productsDtoList),
 						HttpStatus.OK);
 			}
 		} catch (Exception e) {

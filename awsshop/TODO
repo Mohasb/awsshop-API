@@ -2,3 +2,13 @@ check numbers validation
 implement PUT in products
 check return value swagger controller responses products
 check return value of controller products
+
+post de producto cin categoria que no existe: 
+{
+  "status": "ERROR",
+  "message": "An error occurred while saving the product",
+  "details": {
+    "exception": "could not execute statement [Cannot add or update a child row: a foreign key constraint fails (`dbawsshop`.`products`, CONSTRAINT `FKog2rp4qthbtt2lfyhfo32lsw9` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`))] [insert into products (category_id,created_at,description,image_or_glb_url,name,price,sku,status,stock,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into products (category_id,created_at,description,image_or_glb_url,name,price,sku,status,stock,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [null]"
+  },
+  "data": null
+}

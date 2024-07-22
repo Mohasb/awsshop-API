@@ -41,10 +41,9 @@ public class CategoryService {
 					.collect(Collectors.toList());
 
 			String message = !categoryHierarchy.isEmpty() ? ApiConstants.CATEGORY_LIST_SUCCESS_MESSAGE : ApiConstants.NO_CATEGORIES_MESSAGE;
-			HttpStatus httpStatus = !categoryHierarchy.isEmpty() ? HttpStatus.OK : HttpStatus.NO_CONTENT;
 
 			return new ResponseEntity<>(new AwsshopApiResponse<>(ApiConstants.SUCCESS_STATUS, message, null, categoryHierarchy),
-					httpStatus);
+					HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(new AwsshopApiResponse<>(ApiConstants.ERROR_STATUS,
 					ApiConstants.SERVER_ERROR, Map.of(ApiConstants.EXCEPTION, e.getMessage()), null),

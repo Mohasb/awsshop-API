@@ -17,6 +17,7 @@ import com.muhammadhh.awsshop.models.Product;
 import com.muhammadhh.awsshop.models.dto.ProductDto;
 import com.muhammadhh.awsshop.services.product.ProductService;
 import com.muhammadhh.awsshop.utils.responses.AwsshopApiResponse;
+import com.muhammadhh.awsshop.utils.responses.ProductResponseOpenApi;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -39,10 +40,10 @@ public class ProductController {
 	@GetMapping
 	@Operation(summary = "Retrieve all products", description = "Get a product array with all products")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "A list with all the products", content = {
-			@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Product.class))) }),
+			@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProductResponseOpenApi.class))) }),
 			@ApiResponse(responseCode = "400", description = "No products found", content = @Content),
 			@ApiResponse(responseCode = "500", content = @Content) })
-	public ResponseEntity<AwsshopApiResponse<List<Product>>> getAllProducts() {
+	public ResponseEntity<AwsshopApiResponse<List<ProductDto>>> getAllProducts() {
 
 		return productService.getAllProducts();
 

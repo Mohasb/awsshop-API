@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.muhammadhh.awsshop.models.dto.CategoryDto;
 import com.muhammadhh.awsshop.services.category.CategoryService;
 import com.muhammadhh.awsshop.utils.responses.AwsshopApiResponse;
-import com.muhammadhh.awsshop.utils.responses.CategoryResponse;
+import com.muhammadhh.awsshop.utils.responses.CategoryResponseOpenApi;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -39,7 +39,7 @@ public class CategoryController {
 	@Operation(summary = "Retrieve all categories hierarchy", description = "Get all categories in hierarchy format")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "A list with all the categories", content = {
-					@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CategoryResponse.class))) }),
+					@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CategoryResponseOpenApi.class))) }),
 			@ApiResponse(responseCode = "400", description = "No categories found", content = @Content),
 			@ApiResponse(responseCode = "500", content = @Content) })
 	public ResponseEntity<AwsshopApiResponse<List<CategoryDto>>> getAllCategories() {
@@ -52,7 +52,7 @@ public class CategoryController {
 	@GetMapping("/{id}")
 	@Operation(summary = "Retrieve a category by Id", description = "Get a category object by specifying its id. The response is category object with his subcategories")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "category found", content = {
-			@Content(mediaType = "application/json", schema = @Schema(implementation = CategoryResponse.class)) }),
+			@Content(mediaType = "application/json", schema = @Schema(implementation = CategoryResponseOpenApi.class)) }),
 			@ApiResponse(responseCode = "400", description = "category not found with that id", content = @Content),
 			@ApiResponse(responseCode = "500", content = @Content) })
 	public ResponseEntity<AwsshopApiResponse<CategoryDto>> getCategoryById(
@@ -66,7 +66,7 @@ public class CategoryController {
 	@PostMapping
 	@Operation(summary = "Add a category", description = "add a category")
 	@ApiResponses(value = { @ApiResponse(responseCode = "201", description = "Category added", content = {
-			@Content(mediaType = "application/json", schema = @Schema(implementation = CategoryResponse.class)) }),
+			@Content(mediaType = "application/json", schema = @Schema(implementation = CategoryResponseOpenApi.class)) }),
 			@ApiResponse(responseCode = "400", description = "Category not added", content = @Content),
 			@ApiResponse(responseCode = "500", content = @Content) })
 	public ResponseEntity<AwsshopApiResponse<CategoryDto>> createCategory(@RequestBody CategoryDto categoryDto) {
@@ -79,7 +79,7 @@ public class CategoryController {
 	@PutMapping("/{id}")
 	@Operation(summary = "Put a category", description = "put a category")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "category modified", content = {
-			@Content(mediaType = "application/json", schema = @Schema(implementation = CategoryResponse.class)) }),
+			@Content(mediaType = "application/json", schema = @Schema(implementation = CategoryResponseOpenApi.class)) }),
 			@ApiResponse(responseCode = "400", description = "category not modified", content = @Content),
 			@ApiResponse(responseCode = "500", content = @Content) })
 	public ResponseEntity<AwsshopApiResponse<CategoryDto>> putCategory(@PathVariable(value = "id", required = true) Long id, @RequestBody CategoryDto categoryDto) {
