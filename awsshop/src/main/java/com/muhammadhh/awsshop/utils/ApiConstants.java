@@ -19,7 +19,12 @@ public class ApiConstants {
     public static final String CATEGORY_CREATE_ERROR_DUPLICATED = "Category with the same name already exists";
     public static final String CATEGORY_DELETE_SUCESS = "Category deleted successfully";
 
-    
+    // Messages Product
+    public static final String PRODUCT_FOUND_MESSAGE = "Product found";
+    public static final String PRODUCT_NOT_FOUND_MESSAGE = "Product not found";
+    public static final String PRODUCT_CREATE_SUCCESS = "Product added successfully";
+    public static final String PRODUCT_CREATE_ERROR_MESSAGE = "An error occurred while saving the product";
+
     
     // General messages
     public static final String SERVER_ERROR = "Internal server error";

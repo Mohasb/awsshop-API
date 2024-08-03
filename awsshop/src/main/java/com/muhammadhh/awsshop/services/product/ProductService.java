@@ -13,12 +13,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.muhammadhh.awsshop.models.Category;
+import com.muhammadhh.awsshop.models.Media;
 import com.muhammadhh.awsshop.models.Product;
+import com.muhammadhh.awsshop.models.dto.CategoryDto;
 import com.muhammadhh.awsshop.models.dto.ProductDto;
 import com.muhammadhh.awsshop.respositories.CategoryRepository;
 import com.muhammadhh.awsshop.respositories.ProductRepository;
 import com.muhammadhh.awsshop.utils.ApiConstants;
 import com.muhammadhh.awsshop.utils.responses.AwsshopApiResponse;
+
+import jakarta.validation.Valid;
 
 @Service
 public class ProductService {
@@ -36,12 +40,12 @@ public class ProductService {
 		try {
 			List<Product> productsList = productRepository.findAll();
 			List<ProductDto> productsDtoList = productsList.stream()
-		            .map(product -> modelMapper.map(product, ProductDto.class))
-		            .collect(Collectors.toList());
+					.map(product -> modelMapper.map(product, ProductDto.class)).collect(Collectors.toList());
 
 			if (!productsList.isEmpty()) {
 				return new ResponseEntity<>(
-						new AwsshopApiResponse<>("SUCCESS", "List of all products", null, productsDtoList), HttpStatus.OK);
+						new AwsshopApiResponse<>("SUCCESS", "List of all products", null, productsDtoList),
+						HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(
 						new AwsshopApiResponse<>("SUCCESS", "There are no products", null, productsDtoList),
@@ -59,26 +63,25 @@ public class ProductService {
 	}
 
 	// --------------------------------------------------------GET(ID)---------------------------------------------------------------------------
-	public ResponseEntity<AwsshopApiResponse<Product>> getProductById(Long id) {
+	public ResponseEntity<AwsshopApiResponse<ProductDto>> getProductById(Long id) {
 
 		try {
-			Product product = productRepository.findById(id).orElse(null);
-			if (product != null) {
-				return new ResponseEntity<>(new AwsshopApiResponse<>("SUCCESS", "Product found", null, product),
-						HttpStatus.OK);
-			} else {
-				return new ResponseEntity<>(
-						new AwsshopApiResponse<>("ERROR", "Product with id=" + id + " not found", null, null),
-						HttpStatus.NOT_FOUND);
-			}
-		} catch (Exception e) {
-			Map<String, Object> errorDetails = new HashMap<>();
-			errorDetails.put("exception", e.getMessage());
+			Optional<Product> productOptional = productRepository.findById(id);
 
-			return new ResponseEntity<>(new AwsshopApiResponse<>("ERROR",
-					"An error occurred while fetching the product", errorDetails, null),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			if (productOptional.isPresent()) {
+				ProductDto productDto = modelMapper.map(productOptional, ProductDto.class);
+				return new ResponseEntity<>(new AwsshopApiResponse<>(ApiConstants.SUCCESS_STATUS,
+						ApiConstants.PRODUCT_FOUND_MESSAGE, null, productDto), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(new AwsshopApiResponse<>(ApiConstants.ERROR_STATUS,
+						ApiConstants.PRODUCT_NOT_FOUND_MESSAGE, null, null), HttpStatus.NOT_FOUND);
+			}
+
+		} catch (RuntimeException e) {
+			return new ResponseEntity<>(new AwsshopApiResponse<>(ApiConstants.ERROR_STATUS, ApiConstants.SERVER_ERROR,
+					Map.of(ApiConstants.EXCEPTION, e.getMessage()), null), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+
 	}
 
 	// --------------------------------------------------------POST---------------------------------------------------------------------------
@@ -91,29 +94,64 @@ public class ProductService {
 
 			category.ifPresent(product::setCategory);
 
+			// Mapeo de MediaDto a Media y configuración en el producto
+			List<Media> mediaList = productDto.getMedia().stream()
+					.map(mediaDto -> modelMapper.map(mediaDto, Media.class)).collect(Collectors.toList());
+			product.setMedia(mediaList);
+
 			Product savedProduct = productRepository.save(product);
 
 			ProductDto productDtoSaved = modelMapper.map(savedProduct, ProductDto.class);
 
-			return new ResponseEntity<>(
-					new AwsshopApiResponse<>("SUCCESS", "Product added successfully", null, productDtoSaved),
-					HttpStatus.CREATED);
-		} catch (Exception e) {
-			Map<String, Object> errorDetails = new HashMap<>();
-			errorDetails.put("exception", e.getMessage());
-
-			return new ResponseEntity<>(
-					new AwsshopApiResponse<>("ERROR", "An error occurred while saving the product", errorDetails, null),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(new AwsshopApiResponse<>(ApiConstants.SUCCESS_STATUS,
+					ApiConstants.PRODUCT_CREATE_SUCCESS, null, productDtoSaved), HttpStatus.CREATED);
+		} catch (RuntimeException e) {
+			return new ResponseEntity<>(new AwsshopApiResponse<>(ApiConstants.ERROR_STATUS, ApiConstants.SERVER_ERROR,
+					Map.of(ApiConstants.EXCEPTION, e.getMessage()), null), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	// --------------------------------------------------------PUT---------------------------------------------------------------------------
 	// TODO put
-	public ResponseEntity<?> putProduct(Long id) {
-		return new ResponseEntity<>(
-				new AwsshopApiResponse<>("ERROR", "Product with id=" + id + " not found", null, null),
-				HttpStatus.NOT_FOUND);
+	public ResponseEntity<?> putProduct(Long id, ProductDto productDto) {
+		try {
+			Optional<Product> existingProductOpt = productRepository.findById(id);
+
+			if (existingProductOpt.isPresent()) {
+				Product existingProduct = existingProductOpt.get();
+
+				// Map the fields from productDto to existingProduct
+				modelMapper.map(productDto, existingProduct);
+
+				// Handle the category separately if categoryId is present in the productDto
+				if (productDto.getCategoryId() != null) {
+					Category category = categoryRepository.findById(productDto.getCategoryId())
+							.orElseThrow(() -> new RuntimeException("Category not found"));
+					existingProduct.setCategory(category);
+				}
+
+				// Actualizar la lista de media
+				List<Media> mediaList = productDto.getMedia().stream()
+						.map(mediaDto -> modelMapper.map(mediaDto, Media.class)).collect(Collectors.toList());
+				existingProduct.setMedia(mediaList);
+
+				// Save the updated product
+				Product updatedProduct = productRepository.save(existingProduct);
+
+				// Convert updatedProduct to ProductDto
+				ProductDto updatedProductDto = modelMapper.map(updatedProduct, ProductDto.class);
+
+				return new ResponseEntity<>(new AwsshopApiResponse<>(ApiConstants.SUCCESS_STATUS,
+						ApiConstants.UPDATE_SUCCESS_MESSAGE, null, updatedProductDto), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(new AwsshopApiResponse<>(ApiConstants.ERROR_STATUS,
+						"Product with id=" + id + " not found", null, null), HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<>(new AwsshopApiResponse<>(ApiConstants.ERROR_STATUS,
+					"An error occurred while updating the product", Map.of("exception", e.getMessage()), null),
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	// --------------------------------------------------------DELETE---------------------------------------------------------------------------

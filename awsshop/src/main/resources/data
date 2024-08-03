@@ -1,10 +1,40 @@
--- Insertar en la tabla categories
-INSERT INTO categories (id, name) VALUES ('Electrónica');
+-- Insertar la categoría principal 'Electrónica'
+INSERT INTO categories (name, parent_id) VALUES ('Electrónica', NULL);
 
--- Insertar en la tabla categories con referencia a la categoría padre
-INSERT INTO categories (id, name, parentCategory_id) VALUES ('Smartphones', 1);
+-- Esperar unos segundos para que se actualice la tabla
+-- Insertar subcategorías asociadas a 'Electrónica'
+SET @parent_id = (SELECT id FROM categories WHERE name = 'Electrónica');
 
--- Insertar en la tabla products con referencia a la categoría
-INSERT INTO products (id, name, price, description, imageOrGlbUrl, stock, sku, status, createdAt, updatedAt, category_id) 
-VALUES 
-('iPhone 13', 999.99, 'Latest iPhone model', 'http://example.com/iphone13.png', 50, 'IPH13', 'ACTIVE', '2024-07-20T11:41:37.520Z', '2024-07-20T11:41:37.521Z', 2);
+INSERT INTO categories (name, parent_id) VALUES ('Smartphones', @parent_id);
+INSERT INTO categories (name, parent_id) VALUES ('Computers', @parent_id);
+INSERT INTO categories (name, parent_id) VALUES ('Auricular', @parent_id);
+INSERT INTO categories (name, parent_id) VALUES ('Camaras', @parent_id);
+INSERT INTO categories (name, parent_id) VALUES ('Reloj', @parent_id);
+
+
+-- Insertar productos
+INSERT INTO products (name, price, description, stock, sku, status, category_id, created_at, updated_at) VALUES 
+('Smartphone XYZ', 799.99, 'El último modelo del Smartphone XYZ con pantalla OLED y cámara de 108MP.', 50, 'XYZ-SM-2024', 'ACTIVE', 2, NOW(), NOW()),
+('Laptop Gaming Ultra', 1299.99, 'Laptop gaming con procesador i9, 16GB RAM y tarjeta gráfica RTX 3080.', 30, 'LGU-2024', 'ACTIVE', 3, NOW(), NOW()),
+('Auriculares Inalámbricos Q10', 199.99, 'Auriculares con cancelación de ruido y batería de larga duración.', 100, 'AIR-Q10', 'ACTIVE', 4, NOW(), NOW()),
+('Cámara Fotográfica 4K', 499.99, 'Cámara fotográfica con capacidad de grabación en 4K y lente intercambiable.', 20, 'CAM-4K-2024', 'ACTIVE', 5, NOW(), NOW()),
+('Reloj Inteligente Pro', 249.99, 'Reloj inteligente con monitoreo de salud y funciones deportivas.', 75, 'SMPRO-2024', 'ACTIVE', 5, NOW(), NOW());
+
+-- Insertar medios
+INSERT INTO media (product_id, url, type) VALUES 
+(1, 'https://example.com/images/smartphone-xyz-front.jpg', 'IMAGE'),
+(1, 'https://example.com/images/smartphone-xyz-back.jpg', 'IMAGE'),
+(1, 'https://example.com/videos/smartphone-xyz-overview.mp4', 'VIDEO'),
+
+(2, 'https://example.com/images/laptop-gaming-ultra.jpg', 'IMAGE'),
+(2, 'https://example.com/videos/laptop-gaming-ultra-unboxing.mp4', 'VIDEO'),
+
+(3, 'https://example.com/images/auriculares-q10.jpg', 'IMAGE'),
+(3, 'https://example.com/videos/auriculares-q10-review.mp4', 'VIDEO'),
+
+(4, 'https://example.com/images/camara-4k-front.jpg', 'IMAGE'),
+(4, 'https://example.com/images/camara-4k-back.jpg', 'IMAGE'),
+(4, 'https://example.com/videos/camara-4k-demo.mp4', 'VIDEO'),
+
+(5, 'https://example.com/images/reloj-inteligente-pro.jpg', 'IMAGE'),
+(5, 'https://example.com/videos/reloj-inteligente-pro-review.mp4', 'VIDEO');

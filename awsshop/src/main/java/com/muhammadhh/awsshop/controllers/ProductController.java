@@ -40,7 +40,7 @@ public class ProductController {
 	@GetMapping
 	@Operation(summary = "Retrieve all products", description = "Get a product array with all products")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "A list with all the products", content = {
-			@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProductResponseOpenApi.class))) }),
+			@Content(mediaType = "application/json", schema = @Schema(implementation = ProductResponseOpenApi.class)) }),
 			@ApiResponse(responseCode = "400", description = "No products found", content = @Content),
 			@ApiResponse(responseCode = "500", content = @Content) })
 	public ResponseEntity<AwsshopApiResponse<List<ProductDto>>> getAllProducts() {
@@ -83,9 +83,9 @@ public class ProductController {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = Product.class)) }),
 			@ApiResponse(responseCode = "400", description = "Product not added", content = @Content) })
 	public ResponseEntity<?> updateProduct(@PathVariable(value = "id", required = true) Long id,
-			@RequestBody @Valid Product productDetails) {
+			@RequestBody @Valid ProductDto productDetails) {
 
-		return productService.putProduct(id);
+		return productService.putProduct(id, productDetails);
 
 	}
 

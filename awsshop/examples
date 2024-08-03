@@ -17,29 +17,58 @@ Introducir subcategoria:
   }
 }
 
-Introducir un producto: 
 {
-  "name": "iPhone 13",
-  "price": 999.99,
-  "description": "Latest iPhone model",
-  "imageOrGlbUrl": "http://example.com/iphone13.png",
-  "stock": 50,
-  "sku": "IPH13",
-  "status": "ACTIVE",
-  "createdAt": "2024-07-20T11:41:37.520Z",
-  "updatedAt": "2024-07-20T11:41:37.521Z",
-  "categoryId": 2	
+  "name": "Auricular",
+  "parentCategory": {
+    "id": 1
+  }
 }
 
 {
-  "name": "Macbook",
-  "price": 1999.99,
-  "description": "Latest v model",
-  "imageOrGlbUrl": "http://example.com/Macbook.png",
-  "stock": 50,
-  "sku": "MCK",
-  "status": "ACTIVE",
-  "createdAt": "2024-07-20T11:41:37.520Z",
-  "updatedAt": "2024-07-20T11:41:37.521Z",
-    "categoryId": 3
+  "name": "Camaras",
+  "parentCategory": {
+    "id": 1
+  }
 }
+
+{
+  "name": "Reloj",
+  "parentCategory": {
+    "id": 1
+  }
+}
+----------------------------------------------------------------
+Introducir un producto: 
+
+{
+  "name": "Smartphone XYZ",
+  "price": 799.99,
+  "description": "El último modelo del Smartphone XYZ con pantalla OLED y cámara de 108MP.",
+  "glbUrl": "https://example.com/3d/smartphone-xyz.glb",
+  "stock": 50,
+  "sku": "XYZ-SM-2024",
+  "status": "ACTIVE",
+  "categoryId": 2,
+  "media": [
+    {
+      "url": "https://example.com/images/smartphone-xyz-front.jpg",
+      "type": "IMAGE"
+    },
+    {
+      "url": "https://example.com/images/smartphone-xyz-back.jpg",
+      "type": "IMAGE"
+    },
+    {
+      "url": "https://example.com/videos/smartphone-xyz-overview.mp4",
+      "type": "VIDEO"
+    }
+  ]
+}
+
+
+
+
+
+
+
+

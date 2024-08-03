@@ -2,7 +2,9 @@ package com.muhammadhh.awsshop.models;
 
 
 import java.util.Date;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -47,10 +50,6 @@ public class Product {
 	@Size(min = 2, max = 100, message = "description has to be between 2-100 letters")
 	private String description;
 
-	@NotBlank(message = "glbUrl cannot be empty")
-	@Size(min = 2, max = 50)
-	private String imageOrGlbUrl;
-
 	@NotNull(message = "stock is mandatory")
 	@Positive(message = "stock has to be greater than 0")
     private Integer stock;
@@ -71,6 +70,10 @@ public class Product {
 	@ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+	
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "product_id")
+    private List<Media> media;
 
     public enum Status {
         ACTIVE, INACTIVE
